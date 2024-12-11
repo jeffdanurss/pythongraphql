@@ -15,4 +15,4 @@ app.include_router(graphql_app, prefix="/graphql")
 # Ruta raíz para saber que el servidor está corriendo
 @app.get("/")
 async def root():
-    return {"message": "¡Servidor GraphQL funcionando!"}
+    return {"message": "¡Bienvenido servidor graphql funcionando!"}
