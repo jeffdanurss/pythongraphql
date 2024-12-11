@@ -1,16 +1,17 @@
-import graphene
+# schema.py
+import strawberry
 
 # Definir un tipo que represente un objeto
-class Persona(graphene.ObjectType):
-    nombre = graphene.String()
-    edad = graphene.Int()
+@strawberry.type
+class Persona:
+    nombre: str
+    edad: int
 
 # Definir las consultas
-class Query(graphene.ObjectType):
-    # Definir una consulta que devuelve una lista de personas
-    personas = graphene.List(Persona)
-
-    def resolve_personas(self, info):
+@strawberry.type
+class Query:
+    @strawberry.field
+    def personas(self) -> list[Persona]:
         # Datos de ejemplo
         return [
             Persona(nombre="Juan", edad=25),
@@ -19,4 +20,4 @@ class Query(graphene.ObjectType):
         ]
 
 # Crear el esquema de GraphQL
-schema = graphene.Schema(query=Query)
+schema = strawberry.Schema(query=Query)

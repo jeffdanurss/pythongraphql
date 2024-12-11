@@ -1,20 +1,18 @@
-from flask import Flask
-from flask_graphql import GraphQLView
-from schema import schema
+# app.py
+from fastapi import FastAPI
+from strawberry.fastapi import GraphQLRouter
+from schema import schema  # Importamos el esquema desde schema.py
 
-# Crear una instancia de la aplicación Flask
-app = Flask(__name__)
-# Ruta raíz
-@app.route('/')
-def home():
-    return "Bienvenido a la API GraphQL"
+# Crear la aplicación FastAPI
+app = FastAPI()
 
-# Configurar la ruta /graphql para manejar las peticiones GraphQL
-app.add_url_rule(
-    '/graphql',
-    view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True)
-)
+# Crear el router de GraphQL
+graphql_app = GraphQLRouter(schema)
 
-# Ejecutar la aplicación Flask
-if __name__ == '__main__':
-    app.run(debug=True)
+# Incluir el router en FastAPI bajo el prefijo /graphql
+app.include_router(graphql_app, prefix="/graphql")
+
+# Ruta raíz para saber que el servidor está corriendo
+@app.get("/")
+async def root():
+    return {"message": "¡Servidor GraphQL funcionando!"}
