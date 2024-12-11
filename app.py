@@ -1,23 +1,16 @@
 from flask import Flask
 from flask_graphql import GraphQLView
-from models import db
 from schema import schema
 
+# Crear una instancia de la aplicación Flask
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # Usamos SQLite para este ejemplo
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
+# Configurar la ruta /graphql para manejar las peticiones GraphQL
+app.add_url_rule(
+    '/graphql',
+    view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True)
+)
 
-@app.route('/')
-def home():
-    return "¡Hola, mundo!"
-# Crear la base de datos si no existe
-with app.app_context():
-    db.create_all()
-
-# Definir la vista GraphQL
-app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
-
+# Ejecutar la aplicación Flask
 if __name__ == '__main__':
     app.run(debug=True)
